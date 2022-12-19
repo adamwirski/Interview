@@ -9,7 +9,7 @@ from google.oauth2 import service_account
 
 def load(dataframe):
 
-    credentials = service_account.Credentials.from_service_account_file("C:\\Users\\adamw\\IdeaProjects\\Interview\\credentials\\adam_service_account.json")
+    credentials = service_account.Credentials.from_service_account_file("credentials/adam_service_account.json")
     client = bigquery.Client(credentials=credentials)
 
     # TODO(developer): Set table_id to the ID of the table to create.
