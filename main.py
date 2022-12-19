@@ -30,8 +30,9 @@ update_sheet_values.push_csv_to_gsheet('web_scrapping/capital_cities.csv', sheet
 
 # read from previously pushed google spreadsheet and sava data into a pandas dataframe
 # normally this and above line would be run in different programs, but for the case of this excercise, I'll put them both here to present my knowledge
-
 df = pandas.DataFrame(read_sheet.get_values(sheet_id, 'A:Z', credentials)['values'])
+
+# clean and prepare data taken from CSV file to get ready for data filling with API and further data loading to BIG QUERY
 df = df.iloc[1: , :]
 df.columns = ['Name', 'Latitude', 'Longitude']
 header_list = ['Name', 'Date', 'Latitude', 'Longitude', 'TIME_OF_DAWN', 'TIME_OF_DUSK', 'TIME_OF_SUNRISE', 'TIME_OF_SUNSET']
@@ -43,6 +44,9 @@ df = df[['Name', 'Date', 'Latitude', 'Longitude', 'TIME_OF_DAWN', 'TIME_OF_DUSK'
 df_length = len(df)
 start_date = datetime.date.today()
 rows = df.iterrows()
+
+# Get API data from sunset API endpoint for every location for every X days.
+#  x = 30 (line 53)
 print('Starting filling locations data from sunset API: ')
 for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     if index > 0:
@@ -82,7 +86,5 @@ print('Finished requesting sunset API data')
 
 # # prepare data for loading with correct datatypes
 # scrape_and_clean_locations.clean_before_loading(df)
-
-
 load_to_bigquery.load(df)
 print('Data loaded to big query')
